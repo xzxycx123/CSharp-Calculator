@@ -8,14 +8,13 @@ namespace WinFormsApp1
         {
             InitializeComponent();
         }
-
         private void Form1_Load(object sender, EventArgs e)
         {
 
         }
         bool resulted;
-        double num1 = -1, num2 = -1;
-        bool _2mode = false;
+        decimal num1 = -1, num2 = -1, dottimes = 1;
+        bool _2mode = false,dotmode = false;
         private void GetNumber(Button btn)
         {
             if (resulted)
@@ -23,17 +22,32 @@ namespace WinFormsApp1
                 MessageBox.Show("Choose the calculation method", "info", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
-            int im = int.Parse(btn.Text);
+            decimal im = decimal.Parse(btn.Text);
             if (num1 == -1)
             {
+                if(dotmode) MessageBox.Show("You can't input a dot before the first number", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                dottimes = 1;
                 num1 = im;
                 textBox1.Text = num1.ToString();
+                
             }
             else if (_2mode == false)
             {
-                num1 *= 10;
-                num1 += im;
-                textBox1.Text = num1.ToString();
+                if (dotmode)
+                {
+
+                    num1 += im * 0.1m * dottimes;
+                    dottimes/=10;
+                    textBox1.Text = num1.ToString();
+                }
+                else
+                {
+                    dottimes = 1;
+                    num1 *= 10;
+                    num1 += im;
+                    textBox1.Text = num1.ToString();
+                }
+                
             }
             else if (num2 == -1)
             {
@@ -42,16 +56,26 @@ namespace WinFormsApp1
             }
             else
             {
-                num2 *= 10;
-                num2 += im;
-                textBox1.Text = num2.ToString();
+                if (dotmode)
+                {
+                    num2 += im * 0.1m * dottimes;
+                    dottimes/=10;
+                    textBox1.Text = num2.ToString();
+                }
+                else
+                {
+                    dottimes = 1;
+                    num2 *= 10;
+                    num2 += im;
+                    textBox1.Text = num2.ToString();
+                }
             }
             
         }
         short calcmode = 0;
         private void exe()
         {
-            double res;
+            decimal res;
             switch (calcmode)
             {
                 case 1:
@@ -81,6 +105,7 @@ namespace WinFormsApp1
             num2 = -1;
             _2mode = false;
             resulted = true;
+            dotmode = false;
         }
         private void button1_Click(object sender, EventArgs e)
         {
@@ -127,11 +152,12 @@ namespace WinFormsApp1
         {
             if (num1 == -1)
             {
-                MessageBox.Show("You haven't input the first number", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("You haven't input the first number", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);//filed
             }
             else
             {
                 calcmode = i;
+                dottimes = 1;
                 if (_2mode = true && num2 != -1)
                 {
                     exe();
@@ -139,7 +165,8 @@ namespace WinFormsApp1
                 _2mode = true;
             }
             resulted = false;
-            
+            dotmode = false;
+            dottimes = 1;
         }
         private void button10_Click(object sender, EventArgs e)
         {
@@ -174,11 +201,13 @@ namespace WinFormsApp1
             calcmode = 0;
             resulted = false;
             textBox1.Text = "";
+            dottimes = 1;
         }
-
+        
         private void dotclick(object sender, EventArgs e)
         {
-
+            dotmode= true;
+            textBox1.Text = textBox1.Text + ".";
         }
 
         
