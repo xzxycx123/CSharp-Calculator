@@ -6,7 +6,12 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationIcon>无标题.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="无标题.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="WinForms.Fluent" Version="1.0.0" />
