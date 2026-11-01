@@ -14,7 +14,7 @@ namespace WinFormsApp1
 
         }
         bool resulted;
-        int num1 = -1, num2 = -1;
+        double num1 = -1, num2 = -1;
         bool _2mode = false;
         private void GetNumber(Button btn)
         {
@@ -47,6 +47,40 @@ namespace WinFormsApp1
                 textBox1.Text = num2.ToString();
             }
             
+        }
+        short calcmode = 0;
+        private void exe()
+        {
+            double res;
+            switch (calcmode)
+            {
+                case 1:
+                    res = num1 + num2;
+                    break;
+                case 2:
+                    res = num1 - num2;
+                    break;
+                case 3:
+                    res = num1 * num2;
+                    break;
+                case 4:
+                    if(num2 == 0)
+                    {
+                        MessageBox.Show("You can't divide by zero", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }   
+                    res = num1 / num2;
+                    break;
+                default:
+                    MessageBox.Show("you need to choose calculator's mode");
+                    return;
+            }
+            label1.Text = res.ToString();
+            Debug.WriteLine(res.ToString());
+            num1 = res;
+            num2 = -1;
+            _2mode = false;
+            resulted = true;
         }
         private void button1_Click(object sender, EventArgs e)
         {
@@ -88,7 +122,7 @@ namespace WinFormsApp1
         {
             GetNumber((Button)sender);
         }
-        short calcmode = 0;
+        
         private void MethodChooose(short i)
         {
             if (num1 == -1)
@@ -97,13 +131,15 @@ namespace WinFormsApp1
             }
             else
             {
+                calcmode = i;
                 if (_2mode = true && num2 != -1)
                 {
-                    _2mode = true;
+                    exe();
                 }
+                _2mode = true;
             }
             resulted = false;
-            calcmode = i;
+            
         }
         private void button10_Click(object sender, EventArgs e)
         {
@@ -121,33 +157,11 @@ namespace WinFormsApp1
         {
             MethodChooose(4);
         }
+        
         private void button12_Click(object sender, EventArgs e)
         {
-            int res;
-            switch (calcmode)
-            {
-                case 1:
-                    res = num1 + num2;
-                    break;
-                case 2:
-                    res = num1 - num2;
-                    break;
-                case 3:
-                    res = num1 * num2;
-                    break;
-                case 4:
-                    res = num1 / num2;
-                    break;
-                default:
-                    MessageBox.Show("you need to choose calculator's mode");
-                    return;
-            }
-            label1.Text = res.ToString();
-            Debug.WriteLine(res.ToString());
-            num1 = res;
-            num2 = -1;
-            _2mode = false;
-            resulted = true;
+
+            exe();
 
         }
 
