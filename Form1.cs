@@ -13,7 +13,8 @@ namespace WinFormsApp1
 
         }
         bool resulted;
-        decimal num1 = -1, num2 = -1, dottimes = 1;
+        decimal? num1 = null, num2 = null;
+        decimal dottimes = 1;
         bool _2mode = false,dotmode = false;
         private void GetNumber(Button btn)
         {
@@ -23,51 +24,52 @@ namespace WinFormsApp1
                 return;
             }
             decimal im = decimal.Parse(btn.Text);
-            if (num1 == -1)
+            if (!num1.HasValue)
             {
-                if(dotmode) MessageBox.Show("You can't input a dot before the first number", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                if (dotmode)
+                {
+                    MessageBox.Show("You can't input a dot before the first number", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    dotmode = false;
+                }
                 dottimes = 1;
                 num1 = im;
-                textBox1.Text = num1.ToString();
-                
+                textBox1.Text = num1.Value.ToString();
             }
             else if (_2mode == false)
             {
                 if (dotmode)
                 {
 
-                    num1 += im * 0.1m * dottimes;
+                    num1 = num1.Value + im * 0.1m * dottimes;
                     dottimes/=10;
-                    textBox1.Text = num1.ToString();
+                    textBox1.Text = num1.Value.ToString();
                 }
                 else
                 {
                     dottimes = 1;
-                    num1 *= 10;
-                    num1 += im;
-                    textBox1.Text = num1.ToString();
+                    num1 = num1.Value * 10 + im;
+                    textBox1.Text = num1.Value.ToString();
                 }
                 
             }
-            else if (num2 == -1)
+            else if (!num2.HasValue)
             {
                 num2 = im;
-                textBox1.Text = num2.ToString();
+                textBox1.Text = num2.Value.ToString();
             }
             else
             {
                 if (dotmode)
                 {
-                    num2 += im * 0.1m * dottimes;
+                    num2 = num2.Value + im * 0.1m * dottimes;
                     dottimes/=10;
-                    textBox1.Text = num2.ToString();
+                    textBox1.Text = num2.Value.ToString();
                 }
                 else
                 {
                     dottimes = 1;
-                    num2 *= 10;
-                    num2 += im;
-                    textBox1.Text = num2.ToString();
+                    num2 = num2.Value * 10 + im;
+                    textBox1.Text = num2.Value.ToString();
                 }
             }
             
@@ -75,25 +77,31 @@ namespace WinFormsApp1
         short calcmode = 0;
         private void exe()
         {
+            if (!num1.HasValue || !num2.HasValue)
+            {
+                MessageBox.Show("You need to input two numbers first", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            decimal a = num1.Value, b = num2.Value;
             decimal res;
             switch (calcmode)
             {
                 case 1:
-                    res = num1 + num2;
+                    res = a + b;
                     break;
                 case 2:
-                    res = num1 - num2;
+                    res = a - b;
                     break;
                 case 3:
-                    res = num1 * num2;
+                    res = a * b;
                     break;
                 case 4:
-                    if(num2 == 0)
+                    if (b == 0)
                     {
                         MessageBox.Show("You can't divide by zero", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
-                    }   
-                    res = num1 / num2;
+                    }
+                    res = a / b;
                     break;
                 default:
                     MessageBox.Show("you need to choose calculator's mode");
@@ -102,7 +110,7 @@ namespace WinFormsApp1
             label1.Text = res.ToString();
             Debug.WriteLine(res.ToString());
             num1 = res;
-            num2 = -1;
+            num2 = null;
             _2mode = false;
             resulted = true;
             dotmode = false;
@@ -150,7 +158,7 @@ namespace WinFormsApp1
         
         private void MethodChooose(short i)
         {
-            if (num1 == -1)
+            if (!num1.HasValue)
             {
                 MessageBox.Show("You haven't input the first number", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);//filed
             }
@@ -158,7 +166,7 @@ namespace WinFormsApp1
             {
                 calcmode = i;
                 dottimes = 1;
-                if (_2mode = true && num2 != -1)
+                if (_2mode && num2.HasValue)
                 {
                     exe();
                 }
@@ -195,12 +203,13 @@ namespace WinFormsApp1
         private void button13_Click(object sender, EventArgs e)
         {
             label1.Text = "Answer";
-            num1 = -1;
-            num2 = -1;
+            num1 = null;
+            num2 = null;
             _2mode = false;
             calcmode = 0;
             resulted = false;
             textBox1.Text = "";
+            dotmode = false;
             dottimes = 1;
         }
         
